@@ -66,4 +66,12 @@ body {
   -webkit-box-shadow: 0px 0px 50px -3px #5BA4A4;
   box-shadow: 0px 0px 50px -3px #5BA4A4;
 }
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
 </style>
