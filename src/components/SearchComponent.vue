@@ -1,4 +1,6 @@
 <script setup>
+import data from '@/assets/data.json'
+
 import { computed } from '@vue/reactivity';
 import { ref } from 'vue';
 import CardComponent from './CardComponent.vue';
@@ -15,6 +17,21 @@ function inputBlur(event)
 {
     if (event.relatedTarget?.id != "drop") isOpen.value = false;
 }
+// eslint-disable-next-line
+const filters = computed(() => data.filter(card =>
+{
+    let temp = []
+    temp.push(card.role)
+    temp.push(card.level)
+    temp = temp.concat(card.languages)
+    temp = temp.concat(card.tools)
+    for (let i of picked.value)
+    {
+        if (!temp.includes(i)) return false
+    }
+    return true
+}))
+
 </script>
 
 <template>
@@ -24,12 +41,12 @@ function inputBlur(event)
             <span @click="picked.clear(); input = ''"
                 class="absolute top-[1.125rem] right-8 border-b-[2px] border-transparent hover:border-job-darkCyan cursor-pointer">clear</span>
             <input class="w-full bg-transparent h-[4rem] focus:outline-none pl-8" type="text" v-model="input"
-                @focus="isOpen = true" @blur="inputBlur">
+                placeholder="Add filter" @focus="isOpen = true" @blur="inputBlur">
             <hr class="mx-8">
             <ul class="flex min-h-[4rem] gap-6 px-8 py-4 flex-wrap">
                 <li v-for="(item, index) in picked" :key="index"
                     class="flex items-center h-[2rem] pl-2 bg-job-lightGrayishCyan rounded-[0.25rem] overflow-hidden">
-                    {{  item  }}
+                    {{ item }}
                     <div @click="picked.delete(item)"
                         class="h-full w-[2rem] bg-job-darkCyan ml-2 hover:bg-[#2d3937] cursor-pointer flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14">
@@ -41,18 +58,21 @@ function inputBlur(event)
             </ul>
         </div>
         <div id="drop"
-            class="absolute -bottom-[22rem] left-0 right-0 w-4/5 mx-auto mt-4 z-10 bg-white rounded-[0.25rem] p-2"
+            class="absolute -bottom-[22rem] left-0 right-0 w-4/5 mx-auto mt-4 z-10 bg-white rounded-[0.25rem] p-2 blueShadow"
             v-if="isOpen" tabindex="0">
             <div class="w-full h-[20rem] overflow-scroll FirefoxScroll rtl">
                 <ul class="text-lg w-full font-medium text-job-darkCyan p-2 ltr">
                     <li v-for="(item, index) in showCategories" :key="index"
                         @click.prevent="picked.add(item); isOpen = false; input = ''"
-                        class="px-8 py-2 hover:bg-job-lightGrayishCyan rounded-[0.25rem] cursor-pointer">{{  item  }}</li>
+                        class="px-8 py-2 hover:bg-job-lightGrayishCyan rounded-[0.25rem] cursor-pointer">{{ item }}</li>
                 </ul>
             </div>
         </div>
     </div>
-    <CardComponent></CardComponent>
+    <div class="pt-6 mb-10">
+        <CardComponent v-for="item in filters" :key="item.id" :info="item" @filter="filter => picked.add(filter)">
+        </CardComponent>
+    </div>
 </template>
 
 <style scoped>
