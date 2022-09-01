@@ -2,6 +2,10 @@
 module.exports = {
   content: ["./src/**/*.{vue,js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      mobile: { "max": "740px" },
+      laptop: { 'raw': '(hover: hover)' }
+    },
     extend: {
       colors: {
         'job': {

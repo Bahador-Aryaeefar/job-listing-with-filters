@@ -60,6 +60,7 @@
 body {
   font-family: 'League Spartan';
   background-color: #effafa;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
 
 .blueShadow {
